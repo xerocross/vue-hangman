@@ -5,13 +5,16 @@ module.exports = {
     "env": {
         browser: true,
         commonjs: true,
-        node: true
+        node: true,
+        "jest/globals": true
     },
+    "plugins": ["jest"],
     "extends": [
         "eslint:recommended",
         "plugin:vue/recommended"
     ],
     rules: {
+        "vue/prop-name-casing" : false,
         "no-debugger": process.env.NODE_ENV === "production" ? 2 : 0,
         "indent": ["error", 4],
         "vue/html-indent": ["error", 4, {
@@ -28,6 +31,6 @@ module.exports = {
         "vue/html-self-closing" : [0]
     },
     globals: {
-        "NODE_ENV" : false
+        "env" : false
     }
 };
