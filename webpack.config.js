@@ -11,7 +11,8 @@ module.exports = {
         filename : '[name].js',
     },
     externals : {
-        vue : "Vue" 
+        vue : "Vue",
+        jquery : "$"
         // remove this line if you want 
         // to bundle vue with the script
     },

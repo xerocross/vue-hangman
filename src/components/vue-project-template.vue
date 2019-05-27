@@ -36,6 +36,7 @@
                             <select
                                 v-model="currentGuessLetter"
                                 class="form-control"
+                                :disabled="guessLetterWorking"
                             >
                                 <option
                                     v-for="i in letters"
@@ -48,10 +49,13 @@
                         </div>
                         <div class="col-xs-6">
                             <button
+                                ref="guess-letter-button"
+                                v-aync-working="guessLetterWorking"
                                 class="btn btn-primary"
+                                :disabled="guessLetterWorking"
                                 @click="guess"
                             >
-                                guess letter
+                                {{ guessLetterWorking ? "working" : "guess letter" }}
                             </button>
                         </div>
                     </div>
@@ -63,7 +67,9 @@
                     <div class="col-xs-6">
                         <input
                             v-model="currentGuessPhrase"
+                            v-aync-working="guessPhraseWorking"
                             name="guessPhrase"
+                            :disabled="guessPhraseWorking"
                             type="text"
                             class="form-control"
                         >
@@ -71,9 +77,10 @@
                     <div class="col-xs-6">
                         <button
                             class="btn btn-primary"
+                            :disabled="guessPhraseWorking"
                             @click="guessEntirePhrase"
                         >
-                            guess phrase
+                            {{ guessPhraseWorking ? "working" : "guess phrase" }}
                         </button>
                     </div>
                 </div>
@@ -99,7 +106,10 @@ export default {
             phraseList : PhraseList,
             currentGuessLetter : "A",
             currentGuessPhrase : "",
-            isPhraseGuessCorrect : false
+            isPhraseGuessCorrect : false,
+            guessLetterWorking : false,
+            startGameWorking : false,
+            guessPhraseWorking : false
 
         }
     },
@@ -158,16 +168,35 @@ export default {
     },
     methods : {
         startGame () {
-            this.$store.dispatch('startGame')
+            let self = this;
+            self.startGameWorking = true;
+            this.$store.dispatch('startGame', 
+                {
+                    done : ()=>{
+                        self.startGameWorking = false
+                    }
+                })
         },
         guess () {
+            debugger;
+            let self = this;
+            this.guessLetterWorking = true;
             this.$store.dispatch('guessLetter', {
-                letter : this.currentGuessLetter
+                letter : this.currentGuessLetter,
+                done : ()=> {
+                    this.guessLetterWorking = false;
+                    this.currentGuessLetter = this.letters[0];
+                }
             })
         },
         guessEntirePhrase() {
+            this.guessPhraseWorking = true;
             this.$store.dispatch('guessEntirePhrase', {
-                "guessPhrase" : this.currentGuessPhrase
+                "guessPhrase" : this.currentGuessPhrase,
+                "done" : () => {
+                    this.guessPhraseWorking = false;
+                    this.currentGuessPhrase = "";
+                }
             });
         }
     }
@@ -201,5 +230,31 @@ export default {
         animation-duration: 4s;
         animation-iteration-count: 1;
     }
+
+     @keyframes letter-fade-animation {
+        0%   {color: black}
+        50% {color: white}
+        100% {color: black}
+    }
+    .letters-fade {
+        animation-name: letter-fade-animation;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+    }
+    @keyframes button-pulse-animation {
+        0%   {opacity: 1}
+        50% {opacity: .3}
+        100% {opacity: 1}
+    }
+    .btn {
+        opacity : 1
+    }
+
+    .button-pulse {
+        animation-name: button-pulse-animation;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+    }
+
 }
 </style>
