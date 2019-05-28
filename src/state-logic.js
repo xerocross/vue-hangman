@@ -1,5 +1,8 @@
 import Vuex from "vuex";
 import HangmanService from "./service/hangman-service";
+
+
+
 function cloneArray (arr) {
     let newArray = [];
     for (let i = 0; i < arr.length; i++) {
@@ -62,42 +65,61 @@ export const store = new Vuex.Store({
     },
     actions : {
         startGame ( { commit, state }, payload ) {
-            HangmanService.getPhraseData()
-                .then((data) => {
-                    commit("phraseData",{
-                        phraseNum : data.phraseNum,
-                        phraseLen : data.length
-                    });
-                    commit ("startGame");
-                    payload.done();
-                });
+            return new Promise( (resolve, fail) => {
+                HangmanService.getPhraseData()
+                    .subscribe((val)=> {
+                        if (val.status == "SUCCESS") {
+                            commit("phraseData",{
+                                phraseNum : val.data.phraseNum,
+                                phraseLen : val.data.length
+                            });
+                            commit ("startGame");
+                            resolve();
+                        } else {
+                            fail();
+                        }
+                    })
+            });     
         },
         guessLetter ({commit, state}, payload) {
             commit("guessedLetter",{letter : payload.letter});
-            return HangmanService.guessLetter(state.phraseNum, payload.letter)
-                .then((data) => {
-                    payload.done();
-                    if (data.success == false) {
-                        commit ("failedAttempt");
-                    } else {
-                        commit("mergeNewReveal",{
-                            revealedPhrase : data.revealedPhrase
-                        });
-                    }
-
-                });
+            return new Promise( (resolve, fail) => {
+                HangmanService.guessLetter(state.phraseNum, payload.letter)
+                    .subscribe((val) => {
+                        if (val.status == "SUCCESS") {
+                            if (val.data.success == false) {
+                                commit ("failedAttempt");
+                            } else {
+                                commit("mergeNewReveal",{
+                                    revealedPhrase : val.data.revealedPhrase
+                                });
+                            }
+                            resolve();
+                        } else {
+                            fail();
+                            alert("SORRY.  An unknown error occured.");
+                        }
+                    });
+            });
         },
         guessEntirePhrase({commit, state}, payload) {
-            return HangmanService.guessEntirePhrase(state.phraseNum, payload.guessPhrase)
-                .then( (data) => {
-                    payload.done();
-                    if (data == true) {
-                        commit ("won");
-                    }
-                    else if (data == false) {
-                        commit ("failedAttempt");
-                    }
-                });
+            return new Promise( (resolve, fail) => {
+                HangmanService.guessEntirePhrase(state.phraseNum, payload.guessPhrase)
+                    .subscribe( (val) => {
+                        if (val.status == "SUCCESS") {
+                            if (val.data == true) {
+                                commit ("won");
+                            }
+                            else if (val.data == false) {
+                                commit ("failedAttempt");
+                            }
+                            resolve();
+                        } else {
+                            fail();
+                        }
+
+                    });
+            })
         }
     }
 })

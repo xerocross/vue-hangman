@@ -4,7 +4,7 @@
             v-if="isWon"
             class="alert alert-info"
         >
-            <p>Congratulations, you guessed the phrase correctly: {{ phrase }}</p>
+            <p>Congratulations, you guessed the phrase correctly.</p>
         </div>
         <div v-if="!isGameInProgress">
             <button
@@ -19,8 +19,8 @@
                 <span
                     v-for="item in phraseDisplay"
                     :key="item.key"
+                    v-highlight-on-change="item.letter"
                     class="letter"
-                    :class="{'init-highlight' : item.done}"
                 >
                     {{ item.letter }}
                 </span>
@@ -32,7 +32,7 @@
                 >
                     <label>Guess a Letter</label>
                     <div class="row">
-                        <div class="col-xs-6">
+                        <div class="col-6">
                             <select
                                 v-model="currentGuessLetter"
                                 class="form-control"
@@ -47,7 +47,7 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="col-xs-6">
+                        <div class="col-6">
                             <button
                                 ref="guess-letter-button"
                                 v-aync-working="guessLetterWorking"
@@ -64,7 +64,7 @@
                 
                 <label for="guessPhrase">Guess Entire Phrase</label>
                 <div class="row">
-                    <div class="col-xs-6">
+                    <div class="col-6">
                         <input
                             v-model="currentGuessPhrase"
                             v-aync-working="guessPhraseWorking"
@@ -74,7 +74,7 @@
                             class="form-control"
                         >
                     </div>
-                    <div class="col-xs-6">
+                    <div class="col-6">
                         <button
                             class="btn btn-primary"
                             :disabled="guessPhraseWorking"
@@ -96,21 +96,18 @@
     </div>
 </template>
 <script>
-import PhraseList from "../phrase-list";
-
 export default {
     props : {
     },
     data () {
         return {
-            phraseList : PhraseList,
             currentGuessLetter : "A",
             currentGuessPhrase : "",
             isPhraseGuessCorrect : false,
             guessLetterWorking : false,
             startGameWorking : false,
-            guessPhraseWorking : false
-
+            guessPhraseWorking : false,
+            error : false
         }
     },
     computed : {
@@ -135,20 +132,13 @@ export default {
         phraseDisplay () {
             let phraseDisp = [];
             for (let i = 0; i < this.revealedPhrase.length; i++) {
-                let char;
                 let done = false;
-                if (false) {
-                    char = "&nbsp;&nbsp;&nbsp;";
-                    done = true;
-                } else {
-                    char = this.revealedPhrase[i]
-                }
                 if (this.revealedPhrase[i] != "_") {
                     done = true;
                 }
                 phraseDisp.push({
                     key : i,
-                    letter : char,
+                    letter : this.revealedPhrase[i],
                     done : done
                 })
                 
@@ -162,42 +152,46 @@ export default {
             return this.$store.state.isWon;
         }
     },
-    watch : {
-    },
-    mounted () {
-    },
     methods : {
         startGame () {
             let self = this;
             self.startGameWorking = true;
-            this.$store.dispatch('startGame', 
-                {
-                    done : ()=>{
-                        self.startGameWorking = false
-                    }
+            this.$store.dispatch('startGame')
+                .then(()=> {
+                    this.startGameWorking = false
                 })
+                .catch(()=> {
+                    this.error = true;
+                });
         },
         guess () {
-            debugger;
-            let self = this;
             this.guessLetterWorking = true;
             this.$store.dispatch('guessLetter', {
                 letter : this.currentGuessLetter,
-                done : ()=> {
-                    this.guessLetterWorking = false;
-                    this.currentGuessLetter = this.letters[0];
-                }
+
             })
+                .then(()=> {
+                    this.guessLetterWorking = false;
+                })
+                .catch(()=> {
+                    this.error = true;
+                });
+
+            this.currentGuessLetter = this.letters[0];
+                
         },
         guessEntirePhrase() {
             this.guessPhraseWorking = true;
             this.$store.dispatch('guessEntirePhrase', {
                 "guessPhrase" : this.currentGuessPhrase,
-                "done" : () => {
+            })
+                .then(() => {
                     this.guessPhraseWorking = false;
                     this.currentGuessPhrase = "";
-                }
-            });
+                })
+                .catch(()=> {
+                    this.error = true;
+                });
         }
     }
 }
@@ -221,15 +215,6 @@ export default {
         min-width: 1em;
     }
 
-    @keyframes init-highlight-animation {
-        0%   {background-color:rgb(255, 252, 75);}
-        100% {background-color : transparent;}
-    }
-    .init-highlight {
-        animation-name: init-highlight-animation;
-        animation-duration: 4s;
-        animation-iteration-count: 1;
-    }
 
      @keyframes letter-fade-animation {
         0%   {color: black}
@@ -255,6 +240,17 @@ export default {
         animation-duration: 2s;
         animation-iteration-count: infinite;
     }
+
+    @keyframes init-highlight-animation {
+        0%   {background-color:rgb(255, 252, 75);}
+        100% {background-color : transparent;}
+    }
+    .init-highlight {
+        animation-name: init-highlight-animation;
+        animation-duration: 4s;
+        animation-iteration-count: 1;
+    }
+
 
 }
 </style>

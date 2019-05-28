@@ -1,4 +1,5 @@
 import axios from "axios";
+import Observable from "../Observable.js";
 
 const getPhraseNumUrl = "https://xero-hangman-api.herokuapp.com/getPhraseNum";
 
@@ -10,40 +11,45 @@ function getPhraseCheckUrl(phraseNum, guessPhrase) {
     return `https://xero-hangman-api.herokuapp.com/guessPhrase?guessphrase=${encodedPhrase}&phrasenum=${phraseNum}`;
 }
 
-export default {
-    getPhraseData () {
-        return axios.get(getPhraseNumUrl)
+
+
+const get = function(url) {
+    return new Observable((observer) => {
+        axios.get(url)
             .then(function (response) {
-                // handle success
-                //console.log(response.data);
-                return response.data;
+                if (response.status == "200") {
+                    observer.next({
+                        status : "SUCCESS",
+                        data : response.data
+                    })
+                } else {
+                    observer.next({
+                        status : "FAIL",
+                        data : response.data
+                    })
+                } 
+
             })
             .catch(function (error) {
-            // handle error
-                console.log(error);
+                observer.next({
+                    status : "ERROR",
+                    error : error
+                });
             })
+    })
+}
+
+export default {
+    getPhraseData () {
+        return get(getPhraseNumUrl);
     },
     guessLetter (phraseNum, letter) {
         let url = getCheckLetterUrl(phraseNum, letter);
-        return axios.get(url)
-            .then(function (response) {
-                return response.data;
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            })
+        return get(url);
     },
     guessEntirePhrase (phraseNum, guessPhrase) {
         let url = getPhraseCheckUrl(phraseNum, guessPhrase);
-        return axios.get(url)
-            .then(function (response) {
-                return response.data;
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            })
+        return get(url);
     }
 }
 

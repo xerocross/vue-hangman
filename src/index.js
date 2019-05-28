@@ -7,9 +7,10 @@ let NODE_ENV = env["NODE_ENV"];
 import { store } from "./state-logic";
 
 import "./working-directive";
+import "./highlight-on-change";
 
 new Vue({
-    el : "#vue-project-template",
+    el : "#vue-hangman",
     store,
     components : {
         VueProjectTemplate
