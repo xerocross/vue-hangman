@@ -8,6 +8,7 @@ import { store } from "./state-logic";
 
 import "./working-directive";
 import "./highlight-on-change";
+import "./message-toggle.js";
 
 new Vue({
     el : "#vue-hangman",
