@@ -4,6 +4,8 @@
         <guessing-form 
             :working = "working"
             :available-letters = "availableLetters"
+            :guess-letter-working = "guessLetterWorking"
+            :guess-phrase-working = "guessPhraseWorking"
             @event_guess_letter = "guessLetter"
             @event_guess_phrase = "guessEntirePhrase"
         />
@@ -95,6 +97,7 @@ export default {
                 });
         },
         guessEntirePhrase(phrase) {
+            let self = this;
             this.guessPhraseWorking = true;
             this.$store.dispatch('guessEntirePhrase', {
                 guessPhrase : phrase,
@@ -104,7 +107,7 @@ export default {
                     this.currentGuessPhrase = "";
                 })
                 .catch(()=> {
-                    this.error = true;
+                    self.error = true;
                 });
         }
     }

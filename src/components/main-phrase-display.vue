@@ -3,7 +3,7 @@
         <div
             v-for="word in displayWords"
             :key="word.index"
-            class="main-phrase-display word"
+            class="main-phrase-display-inner word"
         >
             <span
                 v-for="charItem in word"
@@ -26,7 +26,7 @@ export default {
 </script>
 <style lang="scss">
     .main-phrase-display {
-        .main-phrase-display {
+        .main-phrase-display-inner {
             font-size: 20pt;
             text-align: center;
         }
