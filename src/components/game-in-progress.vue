@@ -9,11 +9,28 @@
             :guessed-letters = "guessedLetters"
             :failed-attempts = "failedAttempts"
         />
-        <reset-game-button @event_reset = "reset" />
+        <reset-game-button 
+            @event_reset = "reset" 
+        />
     </div>
 </template>
 
 <script>
+
+function getWord (text, index) {
+    let chars = text.split("");
+    let charObjects = [];
+    for (let i = 0; i < chars.length; i++) {
+        charObjects.push({
+            char : chars[i],
+            index : i
+        });
+    }
+    charObjects.index = index;
+    return charObjects;
+}
+
+            
 import MainPhraseDisplay from "./main-phrase-display.vue";
 import ResetGameButton from "./reset-game-button.vue";
 import GuessedLetters from "./guessed-letters.vue";
@@ -28,8 +45,6 @@ export default {
     data : () => {
         return {
             working : false,
-            availableLetters : [],
-            guessedLetter : [],
             startGameWorking : false,
             error : false
         }
@@ -43,18 +58,26 @@ export default {
         },
         availableLetters () {
             return this.$store.state.availableLetters;
+        },
+        displayWords () {
+            let words = [];
+            if (typeof revealedPhrase == "string") {
+                let preWords = this.revealedPhrase.split(" ");
+                for (let i = 0; i < preWords; i++) {
+                    words.push(getWord(preWords[i], i));
+                }
+            }
+            return words;
+        },
+        failedAttempts () {
+            return this.$store.state.failedAttempts;
         }
     },
     methods : {
         reset () {
             this.$emit("event_reset");
         },
-        failedAttempts () {
-            return this.$store.state.failedAttempts;
-        },
-        working () {
-            this.working = true;
-        }
+        
     }
 }
 </script>

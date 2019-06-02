@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "test": "jest --watchAll",
+    "test": "jest --watchAll --verbose",
     "build": "webpack",
     "dev": "cross-env NODE_ENV=development webpack && yarn start",
     "local": "cross-env NODE_ENV=local webpack-dev-server --hot --inline",

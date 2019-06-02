@@ -24,11 +24,9 @@
 </template>
 <script>
 import GameInProgress from "./game-in-progress.vue";
-import GameMessage from "./game-message.vue";
 export default {
     components : {
-        GameInProgress,
-        GameMessage
+        GameInProgress
     },
     props : {
     },
@@ -37,8 +35,7 @@ export default {
             isPhraseGuessCorrect : false,
             startGameWorking : false,
             error : false,
-            isNewMessage : false,
-            message : ""
+            isNewMessage : false
         }
     },
     computed : {
@@ -68,16 +65,27 @@ export default {
                 this.isNewMessage = false;
             }, 1000);
         },
-        reset() {
-            alert("reset");
-        }
     }
 
 }
 </script>
 <style lang = "scss">
 .vue-hangman {
-    font-size: 14pt;
+    body {
+        font-size: 14pt;
+    }
+    
+    .guessed-letters {
+        font-size: 18pt;
+    }
+    
+    .letter {
+
+    }
+
+    .word {
+
+    }
 
      @keyframes letter-fade-animation {
         0%   {color: black}

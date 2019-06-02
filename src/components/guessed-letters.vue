@@ -1,7 +1,7 @@
 <template>
     <div class="guessed-letters">
-        <p>Guessed Letters: {{ guessedLetters.join(" ") }}</p>
-        <p>Failed Attempts: {{ failedAttempts }}</p>
+        <p>Guessed Letters: <span class="guessed-letters-inner-span">{{ guessedLetters.join(" ") }}</span></p>
+        <p>Failed Attempts: <span class="failed-attempts-num">{{ failedAttempts }}</span></p>
     </div>
 </template>
 <script>

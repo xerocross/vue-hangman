@@ -1,7 +1,7 @@
 <template>
     <div class="reset-game-button">
         <button
-            class="btn btn-primary"
+            class="btn btn-primary reset-button"
             @click="reset"
         >
             reset / start a new game

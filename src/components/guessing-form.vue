@@ -26,7 +26,7 @@
                     <button
                         ref="guess-letter-button"
                         v-aync-working="guessLetterWorking"
-                        class="btn btn-primary"
+                        class="btn btn-primary guess-letter-button"
                         :disabled="working"
                         @click="guess"
                     >
@@ -49,12 +49,12 @@
                         name="guessPhrase"
                         :disabled="guessPhraseWorking"
                         type="text"
-                        class="form-control"
+                        class="form-control guess-phrase-input"
                     >
                 </div>
                 <div class="col-6">
                     <button
-                        class="btn btn-primary"
+                        class="btn btn-primary guess-phrase-button"
                         :disabled="working"
                         @click="guessEntirePhrase"
                     >
@@ -76,7 +76,7 @@ export default {
             type : Boolean,
             default : false
         },
-        currentGuessPhrase : {
+        guessPhraseWorking : {
             type : Boolean,
             default : false
         },
@@ -89,7 +89,6 @@ export default {
         return {
             currentGuessPhrase : "",
             currentGuessLetter : ""
-
         };
     },
     methods : {
