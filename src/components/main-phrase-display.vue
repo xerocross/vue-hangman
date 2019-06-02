@@ -1,0 +1,46 @@
+<template>
+    <div class="main-phrase-display">
+        <div
+            v-for="word in displayWords"
+            :key="word.index"
+            class="main-phrase-display word"
+        >
+            <span
+                v-for="charItem in word"
+                :key="charItem.index"
+                class="letter-char"
+            >{{ charItem.char }}
+            </span>
+        </div>
+    </div>
+</template>
+<script>
+export default {
+    props : {
+        displayWords : {
+            type : Array,
+            default : () => []
+        }
+    }
+}
+</script>
+<style lang="scss">
+    .main-phrase-display {
+        .main-phrase-display {
+            font-size: 20pt;
+            text-align: center;
+        }
+        .word {
+            display: inline-block;
+            margin-right: 3em;
+
+            .letter-char {
+                padding-left:2px;
+                padding-right:2px;
+            }
+        }
+        .letter-char {
+            font-size: 22pt;
+        }
+    }
+</style>

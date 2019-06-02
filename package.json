@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --watchAll",
     "build": "webpack",
     "dev": "cross-env NODE_ENV=development webpack && yarn start",
     "local": "cross-env NODE_ENV=local webpack-dev-server --hot --inline",
@@ -17,7 +17,7 @@
   "license": "0BSD",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/xerocross/vue-hangman.git"
   },
   "jest": {
     "moduleFileExtensions": [

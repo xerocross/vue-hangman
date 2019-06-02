@@ -12,13 +12,15 @@ function cloneArray (arr) {
 }
 
 
+const StartingAvailableLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
 export const store = new Vuex.Store({
     state : {
         phraseNum : NaN,
         phraseLen : 0,
         revealedPhrase : [],
         guessedLettersSet : [],
-        availableLetters : "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
+        availableLetters : StartingAvailableLetters,
         failedAttempts : 0,
         gameInProgress : false,
         isWon : false,
@@ -28,7 +30,7 @@ export const store = new Vuex.Store({
         startGame : (state) => {
             state.gameInProgress = true;
             state.revealedPhrase = [];
-            state.availableLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+            state.availableLetters = StartingAvailableLetters;
             for (let i = 0; i < state.phraseLen; i++) {
                 state.revealedPhrase[i] = "_";
             }
@@ -64,7 +66,7 @@ export const store = new Vuex.Store({
         }
     },
     actions : {
-        startGame ( { commit, state }, payload ) {
+        startGame ( { commit } ) {
             return new Promise( (resolve, fail) => {
                 HangmanService.getPhraseData()
                     .subscribe((val)=> {
@@ -89,12 +91,13 @@ export const store = new Vuex.Store({
                         if (val.status == "SUCCESS") {
                             if (val.data.success == false) {
                                 commit ("failedAttempt");
+                                resolve(false)
                             } else {
                                 commit("mergeNewReveal",{
                                     revealedPhrase : val.data.revealedPhrase
                                 });
+                                resolve(true)
                             }
-                            resolve();
                         } else {
                             fail();
                             alert("SORRY.  An unknown error occured.");

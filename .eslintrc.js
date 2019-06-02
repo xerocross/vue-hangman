@@ -28,7 +28,12 @@ module.exports = {
             "afterColon": true,
             "mode": "strict"
         }],
-        "vue/html-self-closing" : [0]
+        "vue/html-self-closing" : [0],
+        "vue/space-infix-ops": ["error"],
+        "space-infix-ops": ["error"],
+        "vue/no-spaces-around-equal-signs-in-attribute": "off",
+        "no-multi-spaces" : "error",
+        "vue/no-multi-spaces" : "error"
     },
     globals: {
         "env" : false

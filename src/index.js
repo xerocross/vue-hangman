@@ -1,5 +1,5 @@
 import Vue from "vue";
-import VueProjectTemplate from "./components/vue-project-template.vue";
+import VueHangman from "./components/vue-hangman.vue";
 
 
 let NODE_ENV = env["NODE_ENV"];
@@ -14,13 +14,10 @@ new Vue({
     el : "#vue-hangman",
     store,
     components : {
-        VueProjectTemplate
+        VueHangman
     },
     render : function (createElement) {
-        return createElement(VueProjectTemplate, {
-            props : {
-                ENVIRONMENT : NODE_ENV, 
-            }
+        return createElement(VueHangman, {
         });
     }
 });
