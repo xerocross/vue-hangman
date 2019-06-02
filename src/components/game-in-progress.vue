@@ -4,6 +4,8 @@
         <guessing-form 
             :working = "working"
             :available-letters = "availableLetters"
+            @event_guess_letter = "guessLetter"
+            @event_guess_phrase = "guessEntirePhrase"
         />
         <guessed-letters 
             :guessed-letters = "guessedLetters"
@@ -46,7 +48,9 @@ export default {
         return {
             working : false,
             startGameWorking : false,
-            error : false
+            error : false,
+            guessLetterWorking : false,
+            guessPhraseWorking : false
         }
     },
     computed : {
@@ -61,9 +65,10 @@ export default {
         },
         displayWords () {
             let words = [];
-            if (typeof revealedPhrase == "string") {
-                let preWords = this.revealedPhrase.split(" ");
-                for (let i = 0; i < preWords; i++) {
+            let phrase = this.revealedPhrase.join("");
+            if (typeof phrase == "string") {
+                let preWords = phrase.split(" ");
+                for (let i = 0; i < preWords.length; i++) {
                     words.push(getWord(preWords[i], i));
                 }
             }
@@ -77,7 +82,31 @@ export default {
         reset () {
             this.$emit("event_reset");
         },
-        
+        guessLetter(letter) {
+            this.guessLetterWorking = true;
+            this.$store.dispatch('guessLetter', {
+                letter
+            })
+                .then(()=> {
+                    this.guessLetterWorking = false;
+                })
+                .catch(()=> {
+                    this.error = true;
+                });
+        },
+        guessEntirePhrase(phrase) {
+            this.guessPhraseWorking = true;
+            this.$store.dispatch('guessEntirePhrase', {
+                guessPhrase : phrase,
+            })
+                .then(() => {
+                    this.guessPhraseWorking = false;
+                    this.currentGuessPhrase = "";
+                })
+                .catch(()=> {
+                    this.error = true;
+                });
+        }
     }
 }
 </script>

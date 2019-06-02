@@ -69,7 +69,7 @@ export default {
             }, 1000);
         },
         reset() {
-            alert("reset");
+            this.startGame();
         }
     }
 
