@@ -25,7 +25,7 @@ export default {
             font-size: 16pt;
             text-align: center;
             position: fixed;
-            top:5px;
+            bottom:5px;
             right:5px;
             border-radius: 5px;
             border-style: solid;
