@@ -136,7 +136,7 @@ test("guessing form receives guessPhraseWorking", () => {
     expect(vm._props.guessPhraseWorking).toBe(true);
 });
 
-test("guess letter event dispatches 'guessLetter'", () => {
+test("guess letter event dispatches 'guessLetter'", (done) => {
     let guessLetterDispatch = false
     store = new Vuex.Store({
         state : {
@@ -153,9 +153,16 @@ test("guess letter event dispatches 'guessLetter'", () => {
     });
     const c = mount(GameInProgress, {localVue, store});
     const guessingForm = c.find(".guessing-form");
+    const guessLetterSelect = c.find(".guess-letter-select");
+    guessLetterSelect.setValue("A");
     const guessLetterButton = guessingForm.find(".guess-letter-button");
+    expect(guessLetterButton.exists()).toBe(true);
     guessLetterButton.trigger("click");
-    expect(guessLetterDispatch).toBe(true);
+    setTimeout(() => {
+        expect(guessLetterDispatch).toBe(true);
+        done();
+    },10);
+    
 });
 
 test("guess phrase event dispatches 'guessEntirePhrase'", () => {
@@ -269,6 +276,8 @@ test("error during 'guessLetter' sets local error = true", (done) => {
     const c = mount(GameInProgress, {localVue, store});
     const guessingForm = c.find(".guessing-form");
     const guessLetterButton = guessingForm.find(".guess-letter-button");
+    const guessLetterSelect = c.find(".guess-letter-select");
+    guessLetterSelect.setValue("A");
     guessLetterButton.trigger("click");
     setTimeout(() => {
         expect(c.vm.error).toBe(true)
@@ -302,6 +311,8 @@ test("while dispatching guessLetter, guessLetterWorking is true", (done) => {
     const guessingForm = c.find(".guessing-form");
     const guessLetterButton = guessingForm.find(".guess-letter-button");
     expect(c.vm._data.guessLetterWorking).toBe(false);
+    const guessLetterSelect = c.find(".guess-letter-select");
+    guessLetterSelect.setValue("A");
     guessLetterButton.trigger("click");
     setTimeout(() => {
         expect(c.vm._data.guessLetterWorking).toBe(true);

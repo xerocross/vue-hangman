@@ -79,31 +79,3 @@ test("if working, buttons are disabled (2)", function(done) {
         done();
     }, 10);
 });
-
-test("if working, guess letter button inner text changes to 'working'", function(done) {
-    const c = shallowMount(GuessingForm, {
-        localVue,
-        propsData : {
-            availableLetters : ["A", "C"],
-            guessLetterWorking : true
-        }
-    });
-    const guessLetterButton = c.find(".guess-letter-button");
-    c.vm.$nextTick(()=> {
-        expect(guessLetterButton.text()).toBe("working");
-        done();
-    })
-});
-
-test("if working, guess phrase button inner text changes to 'working'", function() {
-    const c = shallowMount(GuessingForm, {
-        localVue,
-        propsData : {
-            availableLetters : ["A", "C"],
-            guessPhraseWorking : true
-        }
-    });
-    const guessPhraseButton = c.find(".guess-phrase-button");
-    guessPhraseButton.is(":disabled");
-    expect(guessPhraseButton.text()).toBe("working");
-});
