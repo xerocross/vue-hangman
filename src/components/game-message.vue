@@ -1,9 +1,11 @@
 <template>
-    <div
-        v-message-toggle="message"
-        class="game-message message"
-    >
-        {{ message }}
+    <div class="game-message">
+        <div
+            v-message-toggle="message"
+            class=" message"
+        >
+            {{ message }}
+        </div>
     </div>
 </template>
 <script>
@@ -23,7 +25,7 @@ export default {
             font-size: 22pt;
             text-align: center;
             position: absolute;
-            top:10px;
+            bottom:10px;
             right:10px;
             border-radius: 5px;
             border-style: solid;

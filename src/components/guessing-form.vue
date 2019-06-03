@@ -11,7 +11,7 @@
                         v-model="currentGuessLetter"
                         name = "guess-letter"
                         class="form-control guess-letter-select"
-                        :disabled="guessLetterWorking"
+                        :disabled="working"
                     >
                         <option
                             v-for="i in availableLetters"
@@ -30,7 +30,7 @@
                         :disabled="working"
                         @click="guess"
                     >
-                        {{ working ? "working" : "guess letter" }}
+                        {{ guessLetterWorking ? "working" : "guess letter" }}
                     </button>
                 </div>
             </div>
@@ -55,10 +55,10 @@
                 <div class="col-6">
                     <button
                         class="btn btn-primary guess-phrase-button"
-                        :disabled="working"
+                        :disabled="guessPhraseWorking"
                         @click="guessEntirePhrase"
                     >
-                        {{ working ? "working" : "guess phrase" }}
+                        {{ guessPhraseWorking ? "working" : "guess phrase" }}
                     </button>
                 </div>
             </div>
@@ -79,10 +79,6 @@ export default {
         guessPhraseWorking : {
             type : Boolean,
             default : false
-        },
-        working : {
-            type : Boolean,
-            default : false
         }
     },
     data : () => {
@@ -91,12 +87,34 @@ export default {
             currentGuessLetter : ""
         };
     },
+    computed : {
+        working () {
+            return this.guessPhraseWorking || this.guessLetterWorking;
+        }   
+    },
+    watch : {
+        availableLetters : {
+            handler(val) {
+                this.currentGuessLetter = val[0];
+                // console.log("avail letters updated");
+                // console.log(val);
+                // console.log("new currentGuessLetter value: " + this.currentGuessLetter);
+                // console.log(typeof this.currentGuessLetter);
+            },
+            deep : true
+        },
+        currentGuessLetter (val) {
+            console.log(val);
+        }
+    },
     methods : {
         guess () {
             this.$emit("event_guess_letter", this.currentGuessLetter);
+            
         },
         guessEntirePhrase () {
             this.$emit("event_guess_phrase", this.currentGuessPhrase);
+            this.currentGuessPhrase = "";
         }
     }
 }

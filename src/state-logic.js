@@ -24,6 +24,7 @@ export const store = new Vuex.Store({
         failedAttempts : 0,
         gameInProgress : false,
         isWon : false,
+        isLost : false,
         httpInProgress : false
     },
     mutations : {
@@ -35,6 +36,7 @@ export const store = new Vuex.Store({
                 state.revealedPhrase[i] = "_";
             }
             state.isWon = false;
+            state.isLost = false;
             state.failedAttempts = 0;
             state.guessedLettersSet = [];
         },
@@ -48,6 +50,9 @@ export const store = new Vuex.Store({
         },
         failedAttempt : (state) => {
             state.failedAttempts++;
+            if (state.failedAttempts >= 6) {
+                state.isLost = true;
+            }
         },
         phraseData : (state, payload) => {
             state.phraseNum = payload.phraseNum;
@@ -115,6 +120,7 @@ export const store = new Vuex.Store({
                             }
                             else if (val.data == false) {
                                 commit ("failedAttempt");
+                                resolve(false);
                             }
                             resolve();
                         } else {

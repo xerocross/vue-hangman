@@ -1,18 +1,40 @@
 <template>
     <div class = "game-in-progress">
         <main-phrase-display :display-words = "displayWords" />
-        <guessing-form 
-            :working = "working"
-            :available-letters = "availableLetters"
-            :guess-letter-working = "guessLetterWorking"
-            :guess-phrase-working = "guessPhraseWorking"
-            @event_guess_letter = "guessLetter"
-            @event_guess_phrase = "guessEntirePhrase"
-        />
-        <guessed-letters 
-            :guessed-letters = "guessedLetters"
-            :failed-attempts = "failedAttempts"
-        />
+        <div
+            v-if = "isLost"
+            class = "game-over"
+        >
+            Game Over
+        </div>
+        <div class="row">
+            <div 
+                v-if = "!isLost" 
+                class = "col-6"
+            >
+                <guessing-form 
+                    :working = "working"
+                    :available-letters = "availableLetters"
+                    :guess-letter-working = "guessLetterWorking"
+                    :guess-phrase-working = "guessPhraseWorking"
+                    @event_guess_letter = "guessLetter"
+                    @event_guess_phrase = "guessEntirePhrase"
+                />
+                <guessed-letters 
+                    :guessed-letters = "guessedLetters"
+                    :failed-attempts = "failedAttempts"
+                />
+            </div>
+            <div 
+                :class="!isLost ? 'col-6' : 'lost'"
+            >
+                <hangman-doodle 
+                    class = "hangman-doodle-outer small"
+                    :completion = "failedAttempts + 1"
+                    image-directory = "/images"
+                />
+            </div>
+        </div>
         <reset-game-button 
             @event_reset = "reset" 
         />
@@ -39,12 +61,14 @@ import MainPhraseDisplay from "./main-phrase-display.vue";
 import ResetGameButton from "./reset-game-button.vue";
 import GuessedLetters from "./guessed-letters.vue";
 import GuessingForm from "./guessing-form.vue";
+import HangmanDoodle from "./hangman-doodle.vue";
 export default {
     components : {
         MainPhraseDisplay,
         ResetGameButton,
         GuessedLetters,
-        GuessingForm
+        GuessingForm,
+        HangmanDoodle
     },
     data : () => {
         return {
@@ -78,41 +102,70 @@ export default {
         },
         failedAttempts () {
             return this.$store.state.failedAttempts;
+        },
+        isLost () {
+            return this.$store.state.isLost;
         }
     },
     methods : {
         reset () {
             this.$emit("event_reset");
         },
+        fail() {
+
+        },
         guessLetter(letter) {
+            this.pushMessage(`looking for any ${letter}s`);
             this.guessLetterWorking = true;
             this.$store.dispatch('guessLetter', {
                 letter
             })
-                .then(()=> {
+                .then((val)=> {
                     this.guessLetterWorking = false;
+                    if (val == false) {
+                        this.pushMessage(`letter ${letter} not found`);
+                    } else {
+                        this.pushMessage("found");
+                    }
                 })
                 .catch(()=> {
+                    this.guessLetterWorking = false;
                     this.error = true;
                 });
         },
         guessEntirePhrase(phrase) {
+            this.pushMessage(`checking your phrase`);
             let self = this;
             this.guessPhraseWorking = true;
             this.$store.dispatch('guessEntirePhrase', {
                 guessPhrase : phrase,
             })
-                .then(() => {
+                .then((val) => {
                     this.guessPhraseWorking = false;
-                    this.currentGuessPhrase = "";
+                    if (val === false) {
+                        this.pushMessage(`phrase not correct`);
+                    }
                 })
                 .catch(()=> {
+                    this.guessPhraseWorking = false;
                     self.error = true;
                 });
+        },
+        pushMessage(message) {
+            this.$emit("event_push_message", message);
         }
     }
 }
 </script>
 <style lang = "scss">
+    .game-over {
+        text-align: center;
+        font-weight: bold;
+        font-size: 130%;
+    }
+    .lost {
+        width: 100%;
+        text-align: center;
+    }
 
 </style>

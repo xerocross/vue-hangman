@@ -8,16 +8,15 @@
             <p>Congratulations, you guessed the phrase correctly.</p>
         </div>
         <div v-if="!isGameInProgress">
-            <button
-                class="btn btn-primary"
-                @click="startGame"
-            >
-                start a new game
-            </button>
+            <start-game-button 
+                :working = "startGameWorking"
+                @event_start_game = "startGame"
+            />
         </div>
         <div v-show="isGameInProgress">
             <game-in-progress 
                 @event_reset = "reset"
+                @event_push_message = "pushNewMessage"
             />
         </div>
     </div>
@@ -25,10 +24,12 @@
 <script>
 import GameInProgress from "./game-in-progress.vue";
 import GameMessage from "./game-message.vue";
+import StartGameButton from "./start-game-button.vue";
 export default {
     components : {
         GameInProgress,
-        GameMessage
+        GameMessage,
+        StartGameButton
     },
     props : {
     },
@@ -78,6 +79,7 @@ export default {
 <style lang = "scss">
 .vue-hangman {
     font-size: 14pt;
+    position : relative;
 
      @keyframes letter-fade-animation {
         0%   {color: black}
@@ -113,8 +115,5 @@ export default {
         animation-duration: 4s;
         animation-iteration-count: 1;
     }
-    
-
-    
 }
 </style>
