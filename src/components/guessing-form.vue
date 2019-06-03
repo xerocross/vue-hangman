@@ -4,7 +4,7 @@
             class="form-group"
             @submit.prevent
         >
-            <label for = "guess-letter">Guess a Letter</label>
+            <!-- <label for = "guess-letter">Guess a Letter</label> -->
             <div class="row">
                 <div class="col-6">
                     <select
@@ -30,7 +30,7 @@
                         :disabled="currentGuessLetter == '' || working"
                         @click="guess"
                     >
-                        {{ guessLetterWorking ? "working" : "guess letter" }}
+                        guess letter
                     </button>
                 </div>
             </div>
@@ -40,7 +40,7 @@
             class="form-group"
             @submit.prevent
         >
-            <label for="guessPhrase">Guess Entire Phrase</label>
+            <!-- <label for="guessPhrase">Guess Entire Phrase</label> -->
             <div class="row">
                 <div class="col-6">
                     <input
@@ -58,7 +58,7 @@
                         :disabled="working"
                         @click="guessEntirePhrase"
                     >
-                        {{ guessPhraseWorking ? "working" : "guess phrase" }}
+                        guess phrase
                     </button>
                 </div>
             </div>

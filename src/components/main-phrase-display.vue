@@ -32,12 +32,16 @@ export default {
         }
         .word {
             display: inline-block;
-            margin-right: 3em;
+            margin-right: 1em;
 
             .letter-char {
-                padding-left:2px;
-                padding-right:2px;
+                width: 1em;
+                // padding-left:2px;
+                // padding-right:2px;
             }
+        }
+        .word:after {
+            content : " "
         }
         .letter-char {
             font-size: 22pt;

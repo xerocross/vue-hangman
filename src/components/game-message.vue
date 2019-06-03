@@ -22,11 +22,11 @@ export default {
     .game-message {
         .message {
             color : white;
-            font-size: 22pt;
+            font-size: 16pt;
             text-align: center;
-            position: absolute;
-            bottom:10px;
-            right:10px;
+            position: fixed;
+            top:5px;
+            right:5px;
             border-radius: 5px;
             border-style: solid;
             border-color: black;
