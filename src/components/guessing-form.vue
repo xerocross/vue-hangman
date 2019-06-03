@@ -27,7 +27,7 @@
                         ref="guess-letter-button"
                         v-aync-working="guessLetterWorking"
                         class="btn btn-primary guess-letter-button"
-                        :disabled="working"
+                        :disabled="currentGuessLetter == '' || working"
                         @click="guess"
                     >
                         {{ guessLetterWorking ? "working" : "guess letter" }}
@@ -55,7 +55,7 @@
                 <div class="col-6">
                     <button
                         class="btn btn-primary guess-phrase-button"
-                        :disabled="guessPhraseWorking"
+                        :disabled="working"
                         @click="guessEntirePhrase"
                     >
                         {{ guessPhraseWorking ? "working" : "guess phrase" }}
@@ -96,15 +96,8 @@ export default {
         availableLetters : {
             handler(val) {
                 this.currentGuessLetter = val[0];
-                // console.log("avail letters updated");
-                // console.log(val);
-                // console.log("new currentGuessLetter value: " + this.currentGuessLetter);
-                // console.log(typeof this.currentGuessLetter);
             },
             deep : true
-        },
-        currentGuessLetter (val) {
-            console.log(val);
         }
     },
     methods : {

@@ -1,13 +1,8 @@
-import {mount, createLocalVue, shallowMount} from '@vue/test-utils';
+import {mount, createLocalVue} from '@vue/test-utils';
 import GameInProgress from "./game-in-progress.vue";
 import Vuex from 'vuex';
 let store;
 let localVue;
-
-
-function getShallow () {
-    return shallowMount(GameInProgress, {localVue, store});
-}
 
 beforeAll(()=> {
     localVue = createLocalVue()
@@ -105,23 +100,6 @@ test("guessing form receives available letters", () => {
     expect(guessingForm.exists()).toBe(true);
     let vm = guessingForm.vm;
     expect(vm._props.availableLetters[1]).toBe("B");
-});
-
-test("guessing form receives working", () => {
-    store = new Vuex.Store({
-        state : {
-            revealedPhrase : ["A","_","B","_","C"],
-            guessedLettersSet : ["A", "C", "G"],
-            availableLetters : ["A", "B"],
-            failedAttempts : 5
-        }
-    });
-    const c = mount(GameInProgress, {localVue, store});
-    const gameInProgress = c.vm;
-    gameInProgress._data.working = true;
-    const guessingForm = c.find(".guessing-form");
-    let vm = guessingForm.vm;
-    expect(vm._props.working).toBe(true);
 });
 
 test("guessing form receives guessLetterWorking", () => {
@@ -237,7 +215,7 @@ test("error during 'guessEntirePhrase' sets local error = true", (done) => {
 test("while dispatching guessEntirePhrase, guessPhraseWorking is true", (done) => {
     
     let resOuter;
-    let promise = new Promise((res, fail)=>{
+    let promise = new Promise((res)=>{
         resOuter = res;
     });
     store = new Vuex.Store({

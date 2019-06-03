@@ -2,7 +2,7 @@
     <div class="start-game-button">
         <button
             v-aync-working="working"
-            class="btn btn-primary"
+            class="btn btn-primary start-button"
             :disabled = "working"
             @click="startGame"
         >
@@ -26,7 +26,4 @@ export default {
 }
 </script>
 <style lang = "scss">
-.start-game-button {
-
-}
 </style>

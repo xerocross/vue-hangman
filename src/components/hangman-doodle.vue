@@ -6,7 +6,6 @@
             width = "300"
             height = "462"
         >
-        </img>
     </div>
 </template>
 <script>

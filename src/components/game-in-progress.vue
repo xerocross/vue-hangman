@@ -13,7 +13,6 @@
                 class = "col-6"
             >
                 <guessing-form 
-                    :working = "working"
                     :available-letters = "availableLetters"
                     :guess-letter-working = "guessLetterWorking"
                     :guess-phrase-working = "guessPhraseWorking"

@@ -43,35 +43,67 @@ test("guessing a phrase emits event_guess_phrase with letter payload ", function
     expect(c.emitted("event_guess_phrase")[0][0]).toBe("my phrase");
 });
 
-test("if working, buttons are disabled", function() {
+test("if working, buttons are disabled (1)", function(done) {
     const c = shallowMount(GuessingForm, {
         localVue,
         propsData : {
             availableLetters : ["A", "C"],
-            working : true
+            guessPhraseWorking : true
         }
     });
     const input = c.find(".guess-phrase-input");
     input.setValue("my phrase");
     const guessPhraseButton = c.find(".guess-phrase-button");
     const guessLetterButton = c.find(".guess-letter-button");
-    expect(guessPhraseButton.is(":disabled")).toBe(true);
-    expect(guessLetterButton.is(":disabled")).toBe(true);
+    setTimeout(()=> {
+        expect(guessPhraseButton.is(":disabled")).toBe(true);
+        expect(guessLetterButton.is(":disabled")).toBe(true);
+        done();
+    }, 10);
 });
-
-test("if working, buttons inner text changes to 'working'", function() {
+test("if working, buttons are disabled (2)", function(done) {
     const c = shallowMount(GuessingForm, {
         localVue,
         propsData : {
             availableLetters : ["A", "C"],
-            working : true
+            guessLetterWorking : true,
         }
     });
     const input = c.find(".guess-phrase-input");
     input.setValue("my phrase");
+    const guessPhraseButton = c.find(".guess-phrase-button");
+    const guessLetterButton = c.find(".guess-letter-button");
+    setTimeout(()=> {
+        expect(guessPhraseButton.is(":disabled")).toBe(true);
+        expect(guessLetterButton.is(":disabled")).toBe(true);
+        done();
+    }, 10);
+});
+
+test("if working, guess letter button inner text changes to 'working'", function(done) {
+    const c = shallowMount(GuessingForm, {
+        localVue,
+        propsData : {
+            availableLetters : ["A", "C"],
+            guessLetterWorking : true
+        }
+    });
+    const guessLetterButton = c.find(".guess-letter-button");
+    c.vm.$nextTick(()=> {
+        expect(guessLetterButton.text()).toBe("working");
+        done();
+    })
+});
+
+test("if working, guess phrase button inner text changes to 'working'", function() {
+    const c = shallowMount(GuessingForm, {
+        localVue,
+        propsData : {
+            availableLetters : ["A", "C"],
+            guessPhraseWorking : true
+        }
+    });
     const guessPhraseButton = c.find(".guess-phrase-button");
     guessPhraseButton.is(":disabled");
     expect(guessPhraseButton.text()).toBe("working");
-    const guessLetterButton = c.find(".guess-letter-button");
-    expect(guessLetterButton.text()).toBe("working");
 });
